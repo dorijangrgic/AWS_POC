@@ -28,7 +28,7 @@ app.MapControllers();
 
 app.MapGet("/weatherforecast/hello", () =>
 {
-    return Enumerable.Range(1, 10).Select(x => new WeatherForecast
+    return Enumerable.Range(1, 5).Select(x => new WeatherForecast
     {
         Date = DateTime.UtcNow,
         TemperatureC = x,
