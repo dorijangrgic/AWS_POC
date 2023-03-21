@@ -7,7 +7,7 @@ on:
 env:
   ECR_REPOSITORY: "demo-repository"
   EB_ENVIRONMENT: "MinimalApi-env"
-  EB_APPLICATION_NAME: "MinimalApi"
+  EB_APPLICATION: "MinimalApi"
 
 jobs:
 
@@ -45,9 +45,9 @@ jobs:
     - name: Deploy to Elastic Beanstalk
       run: |
         echo "Creating new application version for "${{ env.EB_APPLICATION_NAME }}
-        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="785428641476.dkr.ecr.eu-central-1.amazonaws.com",S3Key="Dockerrun.aws.zip"
+        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-785428641476",S3Key="Dockerrun.aws.zip"
         echo "Updatin beanstalk env..."
-        aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION_NAME }} --environment-name ${{ env.EB_ENVIRONMENT }}
+        aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION }} --environment-name ${{ env.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}
 #    - name: Deploy to EB
 #      uses: einaregilsson/beanstalk-deploy@v16
 #      with:
