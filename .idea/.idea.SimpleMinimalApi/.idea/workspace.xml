@@ -5,10 +5,9 @@
     <projectFile profileName="SimpleMinimalApi">SimpleMinimalApi/SimpleMinimalApi.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment="update yml">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment="update">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleMinimalApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SimpleMinimalApi/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +85,7 @@
       <updated>1679306242367</updated>
       <workItem from="1679306243468" duration="1085000" />
       <workItem from="1679307691384" duration="11955000" />
-      <workItem from="1679386954275" duration="4352000" />
+      <workItem from="1679386954275" duration="4902000" />
     </task>
     <task id="LOCAL-00001" summary="Add gitignore file.">
       <created>1679306670763</created>
@@ -179,7 +178,28 @@
       <option name="project" value="LOCAL" />
       <updated>1679391390699</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="udpate gitignore">
+      <created>1679391546728</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391546728</updated>
+    </task>
+    <task id="LOCAL-00015" summary=".">
+      <created>1679391589394</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391589394</updated>
+    </task>
+    <task id="LOCAL-00016" summary="update">
+      <created>1679391950777</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391950777</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,9 +228,10 @@
     <MESSAGE value="change yml scripts." />
     <MESSAGE value="update build.yml" />
     <MESSAGE value="another try" />
-    <MESSAGE value="update" />
-    <MESSAGE value="." />
     <MESSAGE value="update yml" />
-    <option name="LAST_COMMIT_MESSAGE" value="update yml" />
+    <MESSAGE value="udpate gitignore" />
+    <MESSAGE value="." />
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
   </component>
 </project>

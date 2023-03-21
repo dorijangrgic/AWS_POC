@@ -43,7 +43,7 @@ jobs:
 
 
     - name: Deploy to Elastic Beanstalk
-    - run: |
+      run: |
         aws elasticbeanstalk update-environment --application-name ${{ env.CONTAINER_NAME }} --environment-name ${{ env.EB_SERVICE }} --version-label ${{ github.run_id }}
 #    - name: Deploy to EB
 #      uses: einaregilsson/beanstalk-deploy@v16
