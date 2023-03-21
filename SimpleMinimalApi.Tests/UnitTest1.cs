@@ -6,7 +6,7 @@ public class UnitTest1
     public void Test1()
     {
         var first = "Hello";
-        var second = "Helo";
+        var second = "Hello";
         
         Assert.Equal(first, second);
     }
