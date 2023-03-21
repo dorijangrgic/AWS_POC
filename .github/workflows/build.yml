@@ -18,9 +18,8 @@ jobs:
       run: |
         echo "Hej"
         echo ${{ env.ECR_REPOSITORY }}
-        echo ${{ vars.EB_ENVIRONMENT }}
-        echo ${{ vars.EB_APPLICATION }}
-        echo ${{ github.EB_APPLICATION }}
+        echo ${{ vars.ECR_REPOSITORY }}
+        echo ${{ github.ECR_REPOSITORY }}
         echo ${{ vars.S3_BUCKET }}
           
     - name: Checkout repository
