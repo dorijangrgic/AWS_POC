@@ -1,0 +1,42 @@
+name: Docker Build and Deploy to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  ECR_REPOSITORY: "demo-repository"
+  EB_ENVIRONMENT: "MinimalApi-env"
+  APPLICATION_NAME: "simple-api"
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push the Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
+          
+      - name: Set up AWS cli
+        uses: aws-actions/aws-cli-setup@v1
+        with:
+          aws-secret-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk update-environment --application-name ${{ env.APPLICATION_NAME }} --environment-name ${{ env.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}

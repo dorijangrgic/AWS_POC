@@ -1,8 +1,13 @@
-name: Docker Image CI
+name: Docker Build and Deploy to AWS Elastic Beanstalk
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
+
+env:
+  ECR_REPOSITORY: "demo-repository"
+  EB_SERVICE: "MinimalApi-env"
+  CONTAINER_NAME: "simple-api"
 
 jobs:
 
@@ -11,34 +16,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Build the Docker image
-      run: docker build -t simple-api -f Dockerfile .
-    
-    - name: Generate Deployment Package
-      run: zip -r deploy.zip *
-    
-    - name: Get timestamp
-      uses: gerred/actions/current-time@master
-      id: current-time
-        
-    - name: Run string replace
-      uses: frabert/replace-string-action@master
-      id: format-time
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
       with:
-        pattern: '[:\.]+'
-        string: "${{ steps.current-time.outputs.time }}"
-        replace-with: '-'
-        flags: 'g'
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build and push the Docker image
+      env:
+        ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+      run: |
+        docker build -t 
+
 
     - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v14
+      uses: einaregilsson/beanstalk-deploy@v16
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: simple-api
-        environment_name: MinimalApi-env
-        version_label: "simple-api-${{ steps.format-time.outputs.replaced }}"
-        region: eu-central-1
-        deployment_package: deploy.zip
+        application_name: ${{ env.CONTAINER_NAME }}
+        environment_name: ${{ env.EB_SERVICE }}
+        version_label: "simple-api-${{ github.run_id }}"
+        region: ${{ env.AWS_REGION }}
+        deployment_package: SimpleMinimalApi.zip
