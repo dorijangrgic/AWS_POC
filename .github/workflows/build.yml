@@ -2,7 +2,7 @@ name: Docker Build and Deploy to AWS Elastic Beanstalk
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
 
 env:
   ECR_REPOSITORY: "demo-repository"
@@ -36,13 +36,6 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
-          
-      - name: Set up AWS cli
-        uses: aws-actions/aws-cli-setup@v1
-        with:
-          aws-secret-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
           
       - name: Deploy to Elastic Beanstalk
         run: |

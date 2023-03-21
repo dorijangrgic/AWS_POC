@@ -5,7 +5,12 @@
     <projectFile profileName="SimpleMinimalApi">SimpleMinimalApi/SimpleMinimalApi.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment="" />
+    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment="update build.yml">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SimpleMinimalApi/obj/staticwebassets.pack.sentinel" beforeDir="false" afterPath="$PROJECT_DIR$/SimpleMinimalApi/obj/staticwebassets.pack.sentinel" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,21 +25,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\User\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\User\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\User\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\User\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\User\\AppData\\Roaming\\JetBrains\\Rider2022.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\User\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.SimpleMinimalApi">
     <configuration name="SimpleMinimalApi" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/SimpleMinimalApi/SimpleMinimalApi.csproj" />
@@ -75,8 +81,60 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1679306242367</updated>
-      <workItem from="1679306243468" duration="403000" />
+      <workItem from="1679306243468" duration="1085000" />
+      <workItem from="1679307691384" duration="11955000" />
+      <workItem from="1679386954275" duration="3274000" />
     </task>
+    <task id="LOCAL-00001" summary="Add gitignore file.">
+      <created>1679306670763</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1679306670763</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Create simple minimal api project.">
+      <created>1679306739277</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1679306739277</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add proper gitignore file.">
+      <created>1679308034221</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1679308034221</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add Dockerfile and docker-compose.yml">
+      <created>1679326658913</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1679326658913</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Pretty main.yml">
+      <created>1679326805324</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1679326805324</updated>
+    </task>
+    <task id="LOCAL-00006" summary="change yml scripts.">
+      <created>1679389891993</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1679389891993</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update build.yml">
+      <created>1679390111751</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1679390111751</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -84,7 +142,26 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Add gitignore file." />
+    <MESSAGE value="Create simple minimal api project." />
+    <MESSAGE value="Add proper gitignore file." />
+    <MESSAGE value="Add Dockerfile and docker-compose.yml" />
+    <MESSAGE value="Pretty main.yml" />
+    <MESSAGE value="change yml scripts." />
+    <MESSAGE value="update build.yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="update build.yml" />
   </component>
 </project>
