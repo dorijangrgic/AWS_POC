@@ -40,7 +40,7 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }} .
         echo "Pushing image to ECR..."
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }}
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        echo ::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Zip Dockerrun.aws.json and upload to S3 bucket
       run: |
