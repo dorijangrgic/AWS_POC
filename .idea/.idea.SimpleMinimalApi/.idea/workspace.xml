@@ -5,9 +5,10 @@
     <projectFile profileName="SimpleMinimalApi">SimpleMinimalApi/SimpleMinimalApi.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment=".">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
+    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment="update yml">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SimpleMinimalApi/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SimpleMinimalApi/Program.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +16,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/User/Documents/Private/repos/AWS_POC/SimpleMinimalApi/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/User/Documents/Private/repos/AWS_POC/SimpleMinimalApi/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -84,7 +86,7 @@
       <updated>1679306242367</updated>
       <workItem from="1679306243468" duration="1085000" />
       <workItem from="1679307691384" duration="11955000" />
-      <workItem from="1679386954275" duration="4306000" />
+      <workItem from="1679386954275" duration="4352000" />
     </task>
     <task id="LOCAL-00001" summary="Add gitignore file.">
       <created>1679306670763</created>
@@ -170,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679391080459</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="update yml">
+      <created>1679391390699</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391390699</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,8 +209,8 @@
     <MESSAGE value="update build.yml" />
     <MESSAGE value="another try" />
     <MESSAGE value="update" />
-    <MESSAGE value="update yml" />
     <MESSAGE value="." />
-    <option name="LAST_COMMIT_MESSAGE" value="." />
+    <MESSAGE value="update yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="update yml" />
   </component>
 </project>
