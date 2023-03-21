@@ -26,7 +26,7 @@ app.MapControllers();
 
 // endpoints
 
-app.MapGet("/weatherforecast/hello", () =>
+app.MapGet("/hello", () =>
 {
     return Enumerable.Range(1, 5).Select(x => new WeatherForecast
     {

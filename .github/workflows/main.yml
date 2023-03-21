@@ -44,6 +44,9 @@ jobs:
 
     - name: Deploy to Elastic Beanstalk
       run: |
+        echo "Creating new application version for "${{ env.EB_APPLICATION_NAME }}
+        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="785428641476.dkr.ecr.eu-central-1.amazonaws.com",S3Key="Dockerrun.aws.zip"
+        echo "Updatin beanstalk env..."
         aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION_NAME }} --environment-name ${{ env.EB_ENVIRONMENT }}
 #    - name: Deploy to EB
 #      uses: einaregilsson/beanstalk-deploy@v16
