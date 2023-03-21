@@ -51,7 +51,7 @@ jobs:
     - name: Deploy to Elastic Beanstalk
       run: |
         echo "Creating new application version "${{ github.run_id }}" for "${{ env.EB_APPLICATION }}
-        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key="Dockerrun.aws.zip"
+        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key="deployment.zip"
         echo "Updating beanstalk env..."
         aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION }} --environment-name ${{ env.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}
 
