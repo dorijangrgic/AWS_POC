@@ -32,7 +32,7 @@ app.MapGet("/weatherforecast/hello", () =>
     {
         Date = DateTime.UtcNow,
         TemperatureC = x,
-        Summary = $"{x}_forecasts"
+        Summary = $"{x}_forecastsss"
     });
 });
 
