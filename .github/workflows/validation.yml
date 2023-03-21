@@ -2,7 +2,7 @@ name: Validation pipeline triggered on Pull Request creation
   
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ dev, main ]
 
 jobs:
 
