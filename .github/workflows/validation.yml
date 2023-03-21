@@ -5,11 +5,20 @@ on:
     branches: [ dev, main ]
 
 jobs:
-
+  
   test:
     runs-on: ubuntu-latest
 
     steps:
+        
+      - name: Debug variables
+        run: |
+          echo "Hej"
+          echo ${{ vars.ECR_REPOSITORY }}
+          echo ${{ secrets.ECR_REPOSITORY }}
+          echo ${{ vars.S3_BUCKET }}
+          echo ${{ secrets.S3_BUCKET }}
+      
       - name: Checkout repository
         uses: actions/checkout@v3
       
