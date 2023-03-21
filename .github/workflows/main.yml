@@ -41,7 +41,12 @@ jobs:
         echo "Pushing image to ECR..." $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }}
         echo ::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
+        
+    - name: Update Dockerrun.aws.json
+      run: |
+        chmod +x update_dockerrun.sh
+        ./update_dockerrun.sh ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
+        
     - name: Zip Dockerrun.aws.json and upload to S3 bucket
       run: |
         cd SimpleMinimalApi
@@ -54,14 +59,3 @@ jobs:
         aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key="deployment.zip"
         echo "Updating beanstalk env..."
         aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION }} --environment-name ${{ env.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}
-
-#    - name: Deploy to EB
-#      uses: einaregilsson/beanstalk-deploy@v16
-#      with:
-#        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        application_name: ${{ env.CONTAINER_NAME }}
-#        environment_name: ${{ env.EB_SERVICE }}
-#        version_label: "simple-api-${{ github.run_id }}"
-#        region: ${{ env.AWS_REGION }}
-#        deployment_package: SimpleMinimalApi.zip
