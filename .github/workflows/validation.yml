@@ -15,10 +15,9 @@ jobs:
         run: |
           echo "Hej"
           echo ${{ vars.ECR_REPOSITORY }}
-          echo ${{ secrets.ECR_REPOSITORY }}
-          echo ${{ env.ECR_REPOSITORY }}
+          echo ${{ vars.EB_ENVIRONMENT }}
+          echo ${{ vars.EB_APPLICATION }}
           echo ${{ vars.S3_BUCKET }}
-          echo ${{ secrets.S3_BUCKET }}
       
       - name: Checkout repository
         uses: actions/checkout@v3
