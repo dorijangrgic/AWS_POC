@@ -5,16 +5,17 @@
     <projectFile profileName="SimpleMinimalApi">SimpleMinimalApi/SimpleMinimalApi.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment="update build.yml">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
+    <list default="true" id="31eeeae7-56e9-4f1e-b354-3408dac0dede" name="Changes" comment=".">
       <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SimpleMinimalApi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleMinimalApi/obj/staticwebassets.pack.sentinel" beforeDir="false" afterPath="$PROJECT_DIR$/SimpleMinimalApi/obj/staticwebassets.pack.sentinel" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/User/Documents/Private/repos/AWS_POC/SimpleMinimalApi/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -83,7 +84,7 @@
       <updated>1679306242367</updated>
       <workItem from="1679306243468" duration="1085000" />
       <workItem from="1679307691384" duration="11955000" />
-      <workItem from="1679386954275" duration="3274000" />
+      <workItem from="1679386954275" duration="4306000" />
     </task>
     <task id="LOCAL-00001" summary="Add gitignore file.">
       <created>1679306670763</created>
@@ -134,7 +135,42 @@
       <option name="project" value="LOCAL" />
       <updated>1679390111751</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="another try">
+      <created>1679390348485</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1679390348485</updated>
+    </task>
+    <task id="LOCAL-00009" summary="update">
+      <created>1679390837401</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1679390837401</updated>
+    </task>
+    <task id="LOCAL-00010" summary="update yml">
+      <created>1679390904294</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1679390904294</updated>
+    </task>
+    <task id="LOCAL-00011" summary=".">
+      <created>1679391047675</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391047675</updated>
+    </task>
+    <task id="LOCAL-00012" summary=".">
+      <created>1679391080459</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391080459</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,6 +198,10 @@
     <MESSAGE value="Pretty main.yml" />
     <MESSAGE value="change yml scripts." />
     <MESSAGE value="update build.yml" />
-    <option name="LAST_COMMIT_MESSAGE" value="update build.yml" />
+    <MESSAGE value="another try" />
+    <MESSAGE value="update" />
+    <MESSAGE value="update yml" />
+    <MESSAGE value="." />
+    <option name="LAST_COMMIT_MESSAGE" value="." />
   </component>
 </project>
