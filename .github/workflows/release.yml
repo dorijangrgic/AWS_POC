@@ -2,17 +2,10 @@ name: Deploy newest docker image to Elastic Beanstalk environment
 
 on:
   workflow_dispatch:
-
-env:
-  ECR_REPOSITORY: "demo-repository"
-  EB_ENVIRONMENT: "MinimalApi-env"
-  EB_APPLICATION: "MinimalApi"
-  S3_BUCKET: "elasticbeanstalk-eu-central-1-785428641476"
-
+    
 jobs:
 
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,11 +19,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      
-
       - name: Deploy to Elastic Beanstalk
         run: |
           echo "Creating new application version "${{ github.run_id }}" for "${{ env.EB_APPLICATION }}
-          aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key="deployment.zip"
+          aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="deployment.zip"
           echo "Updating beanstalk env..."
           aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION }} --environment-name ${{ env.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}

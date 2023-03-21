@@ -2,24 +2,29 @@ name: Build docker image for specific project and push it to ECR
 
 on:
   push:
-    branches: [ main ]
-
-env:
-  ECR_REPOSITORY: "demo-repository"
-  EB_ENVIRONMENT: "MinimalApi-env"
-  EB_APPLICATION: "MinimalApi"
-  S3_BUCKET: "elasticbeanstalk-eu-central-1-785428641476"
-
+    branches: [ dev, main ]
+  
 jobs:
-
+  
   build:
-
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: ENV variables
+      run: env
+
+    - name: Debug variables
+      run: |
+        echo "Hej"
+        echo ${{ env.ECR_REPOSITORY }}
+        echo ${{ vars.ECR_REPOSITORY }}
+        echo ${{ github.ECR_REPOSITORY }}
+        echo ${{ vars.S3_BUCKET }}
+          
     - name: Checkout repository
       uses: actions/checkout@v3
-
+  
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -51,4 +56,4 @@ jobs:
       run: |
         cd SimpleMinimalApi
         zip deployment.zip Dockerrun.aws.json
-        aws s3 cp deployment.zip s3://${{ env.S3_BUCKET }}
+        aws s3 cp deployment.zip s3://${{ vars.S3_BUCKET }}
