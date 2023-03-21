@@ -3,7 +3,7 @@
 [Oo]bj/
 
 # JetBrains Rider's auto generated files
-.idea/
+**/.idea/
 
 # Logs
 Logs/
