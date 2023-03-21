@@ -11,6 +11,9 @@ jobs:
 
     steps:
         
+      - name: ENV variables
+        run: env
+        
       - name: Debug variables
         run: |
           echo "Hej"
