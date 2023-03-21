@@ -38,7 +38,7 @@ jobs:
       run: |
         cd SimpleMinimalApi
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }} .
-        echo "Pushing image to ECR..."
+        echo "Pushing image to ECR..." $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }}
         echo ::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
