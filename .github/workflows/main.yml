@@ -6,8 +6,8 @@ on:
 
 env:
   ECR_REPOSITORY: "demo-repository"
-  EB_SERVICE: "MinimalApi-env"
-  CONTAINER_NAME: "simple-api"
+  EB_ENVIRONMENT: "MinimalApi-env"
+  EB_APPLICATION_NAME: "MinimalApi"
 
 jobs:
 
@@ -44,7 +44,7 @@ jobs:
 
     - name: Deploy to Elastic Beanstalk
       run: |
-        aws elasticbeanstalk update-environment --application-name ${{ env.CONTAINER_NAME }} --environment-name ${{ env.EB_SERVICE }} --version-label ${{ github.run_id }}
+        aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION_NAME }} --environment-name ${{ env.EB_ENVIRONMENT }}
 #    - name: Deploy to EB
 #      uses: einaregilsson/beanstalk-deploy@v16
 #      with:
