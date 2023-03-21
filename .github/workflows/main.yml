@@ -8,6 +8,7 @@ env:
   ECR_REPOSITORY: "demo-repository"
   EB_ENVIRONMENT: "MinimalApi-env"
   EB_APPLICATION: "MinimalApi"
+  S3_BUCKET: "elasticbeanstalk-eu-central-1-785428641476"
 
 jobs:
 
@@ -41,13 +42,19 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_id }}
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+    - name: Zip Dockerrun.aws.json and upload to S3 bucket
+      run: |
+        cd SimpleMinimalApi
+        zip deployment.zip Dockerrun.aws.json
+        aws s3 cp deployment.zip s3://${{ env.S3_BUCKET }}
 
     - name: Deploy to Elastic Beanstalk
       run: |
         echo "Creating new application version "${{ github.run_id }}" for "${{ env.EB_APPLICATION }}
-        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket="elasticbeanstalk-eu-central-1-785428641476",S3Key="Dockerrun.aws.zip"
+        aws elasticbeanstalk create-application-version --application-name ${{ env.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key="Dockerrun.aws.zip"
         echo "Updating beanstalk env..."
         aws elasticbeanstalk update-environment --application-name ${{ env.EB_APPLICATION }} --environment-name ${{ env.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}
+
 #    - name: Deploy to EB
 #      uses: einaregilsson/beanstalk-deploy@v16
 #      with:
