@@ -4,12 +4,6 @@ on:
   push:
     branches: [ main ]
 
-env:
-  ECR_REPOSITORY: "demo-repository"
-  EB_ENVIRONMENT: "MinimalApi-env"
-  EB_APPLICATION: "MinimalApi"
-  S3_BUCKET: "elasticbeanstalk-eu-central-1-785428641476"
-
 jobs:
 
   build:
@@ -19,6 +13,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      run: |
+        echo ${{ env.ECR_REPOSITORY }}
+        echo ${{ github.S3_BUCKET }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1

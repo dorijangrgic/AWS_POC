@@ -36,4 +36,6 @@ app.MapGet("/hello", () =>
     });
 });
 
+app.MapGet("/yello", () => new {name = "Dorijan", surname = "Grgic"});
+
 app.Run();
