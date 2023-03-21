@@ -2,7 +2,7 @@ name: Build docker image for specific project and push it to ECR
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev, main ]
 
 jobs:
 
