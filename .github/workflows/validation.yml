@@ -16,6 +16,7 @@ jobs:
           echo "Hej"
           echo ${{ vars.ECR_REPOSITORY }}
           echo ${{ secrets.ECR_REPOSITORY }}
+          echo ${{ env.ECR_REPOSITORY }}
           echo ${{ vars.S3_BUCKET }}
           echo ${{ secrets.S3_BUCKET }}
       
