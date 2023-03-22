@@ -1,27 +1,16 @@
-name: Build docker image for specific project and push it to ECR
+name: PROD - Build docker image and push it to ECR
 
 on:
   push:
-    branches: [ dev, main ]
+    branches: [ main ]
   
 jobs:
   
   build:
     runs-on: ubuntu-latest
+    environment: Prod
 
     steps:
-
-    - name: ENV variables
-      run: env
-
-    - name: Debug variables
-      run: |
-        echo "Hej"
-        echo ${{ env.ECR_REPOSITORY }}
-        echo ${{ vars.ECR_REPOSITORY }}
-        echo ${{ github.ECR_REPOSITORY }}
-        echo ${{ vars.S3_BUCKET }}
-          
     - name: Checkout repository
       uses: actions/checkout@v3
   
@@ -41,16 +30,16 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         cd SimpleMinimalApi
-        docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.run_id }} .
-        echo "Pushing image to ECR..." $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
-        docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
-        echo ::set-output name=image::$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+        docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }} .
+        echo "Pushing image to ECR..." $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
+        docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
+        echo ::set-output name=image::$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
 
     - name: Update Dockerrun.aws.json
       run: |
         cd SimpleMinimalApi
         chmod +x update_dockerrun.sh
-        ./update_dockerrun.sh ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
+        ./update_dockerrun.sh ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
 
     - name: Zip Dockerrun.aws.json and upload to S3 bucket
       run: |
