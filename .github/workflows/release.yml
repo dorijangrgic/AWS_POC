@@ -7,7 +7,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: Prod
 
     steps:
       - name: Checkout repository
