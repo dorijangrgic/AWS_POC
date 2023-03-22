@@ -37,12 +37,10 @@ jobs:
 
     - name: Update Dockerrun.aws.json
       run: |
-        cd SimpleMinimalApi
         chmod +x update_dockerrun.sh
         ./update_dockerrun.sh ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
 
     - name: Zip Dockerrun.aws.json and upload to S3 bucket
       run: |
-        cd SimpleMinimalApi
         zip deployment.zip Dockerrun.aws.json
         aws s3 cp deployment.zip s3://${{ vars.S3_BUCKET }}
