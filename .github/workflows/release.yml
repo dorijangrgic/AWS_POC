@@ -8,7 +8,7 @@ on:
       - completed
 
 env:
-  build_run_id: ${{ github.event.workflow_run.id }}
+  build_run_id: PROD-api-${{ github.event.workflow_run.id }}
 
 jobs:
 
@@ -17,9 +17,6 @@ jobs:
     environment: Prod
 
     steps:
-      - name: Debug
-        run: echo ${{ env.build_run_id }}
-
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
