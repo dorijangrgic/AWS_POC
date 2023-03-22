@@ -40,12 +40,12 @@ jobs:
       - name: Install jq cli tool
         run: sudo apt-get install jq
 
-      - name: Download Dockerrun.aws.json
+      - name: Download Dockerrun.aws.jsonm
         run: aws s3 cp s3://${{ vars.S3_BUCKET }} Dockerrun.aws.json
 
       - name: Update Dockerrun.aws.json file with docker image url
         run: |
-           jq '.containerDefinitions[] | select(.name=="web-api") | .image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}' Dockerrun.aws.json > updated-Dockerrun.aws.json
+           jq '.containerDefinitions[0].image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}' Dockerrun.aws.json > updated-Dockerrun.aws.json
            mv updated-Dockerrrun.aws.json Dockerrun.aws.json
 
       - name: Push updated Dockerrun.aws.json file with corresponding zip file
