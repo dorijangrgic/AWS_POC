@@ -2,12 +2,14 @@ name: PROD - Deploy newest docker image to Elastic Beanstalk
 
 on:
   workflow_run:
-    workflows:
-      - "PROD - Build docker image and push it to ECR"
+    workflows: [ "PROD - Build docker image and push it to ECR" ]
+    branches: [ main ]
     types:
       - completed
-  workflow_dispatch:
-    
+
+env:
+  build_run_id: ${{ github.event.workflow_run.id }}
+
 jobs:
 
   deploy:
@@ -27,7 +29,7 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          echo "Creating new application version "${{ github.run_id }}" for "${{ vars.EB_APPLICATION }}
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="deployment.zip"
+          echo "Creating new application version "${{ env.build_run_id }}" for "${{ vars.EB_APPLICATION }}
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="deployment.zip"
           echo "Updating beanstalk vars..."
-          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ github.run_id }}
+          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}

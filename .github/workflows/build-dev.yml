@@ -14,6 +14,9 @@ jobs:
     environment: Dev
 
     steps:
+      - name: Debug
+        run: echo ${{ env.run_id }}
+        
       - name: Checkout repository
         uses: actions/checkout@v3
 
