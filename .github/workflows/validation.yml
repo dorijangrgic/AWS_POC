@@ -1,4 +1,4 @@
-name: Validation pipeline triggered on Pull Request creation
+name: Validation pipeline
   
 on:
   pull_request:

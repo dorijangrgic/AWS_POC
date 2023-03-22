@@ -1,13 +1,13 @@
-name: PROD - Deploy newest docker image to Elastic Beanstalk
+name: DEV - Deploy newest docker image to Elastic Beanstalk
 
 on:
   workflow_dispatch:
-    
+
 jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: dev
 
     steps:
       - name: Checkout repository

@@ -1,0 +1,51 @@
+name: DEV - Build docker image and push it to ECR
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Env
+        run: env
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push the Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          cd SimpleMinimalApi
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.run_id }} .
+          echo "Pushing image to ECR..." $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
+          echo ::set-output name=image::$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+
+      - name: Update Dockerrun.aws.json
+        run: |
+          cd SimpleMinimalApi
+          chmod +x update_dockerrun.sh
+          ./update_dockerrun.sh ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.run_id }}
+
+      - name: Zip Dockerrun.aws.json and upload to S3 bucket
+        run: |
+          cd SimpleMinimalApi
+          zip deployment.zip Dockerrun.aws.json
+          aws s3 cp deployment.zip s3://${{ vars.S3_BUCKET }}

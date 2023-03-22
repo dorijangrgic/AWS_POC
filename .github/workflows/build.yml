@@ -1,27 +1,16 @@
-name: Build docker image for specific project and push it to ECR
+name: PROD - Build docker image and push it to ECR
 
 on:
   push:
-    branches: [ dev, main ]
+    branches: [ main ]
   
 jobs:
   
   build:
     runs-on: ubuntu-latest
+    environment: prod
 
     steps:
-
-    - name: ENV variables
-      run: env
-
-    - name: Debug variables
-      run: |
-        echo "Hej"
-        echo ${{ env.ECR_REPOSITORY }}
-        echo ${{ vars.ECR_REPOSITORY }}
-        echo ${{ github.ECR_REPOSITORY }}
-        echo ${{ vars.S3_BUCKET }}
-          
     - name: Checkout repository
       uses: actions/checkout@v3
   
