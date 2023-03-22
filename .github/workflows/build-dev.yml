@@ -1,4 +1,4 @@
-name: DEV - Build docker image and push it to ECR
+name: DEV - Build
 
 on:
   push:
