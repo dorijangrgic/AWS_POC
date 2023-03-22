@@ -42,14 +42,11 @@ jobs:
 
       - name: Update Dockerrun.aws.json file with docker image url
         run: |
-          #          update image url and save to updated-Dockerrun.aws.json file
-               jq '.containerDefinitions[] | select(.name=="web-api") | .image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}' Dockerrun.aws.json > updated-Dockerrun.aws.json
-          #          replace Dockerrun.aws.json file with the updated file
-               mv updated-Dockerrrun.aws.json Dockerrun.aws.json
+           jq '.containerDefinitions[] | select(.name=="web-api") | .image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}' Dockerrun.aws.json > updated-Dockerrun.aws.json
+           mv updated-Dockerrrun.aws.json Dockerrun.aws.json
 
       - name: Push updated Dockerrun.aws.json file with corresponding zip file
         run: |
           zip Dockerrun.zip Dockerrun.aws.json
-          #         json file is pushed because another repository must use that same file to update it's image url (client-app)
           aws s3 cp Dockerrun.aws.json s3://${{ vars.S3_BUCKET }}
           aws s3 cp Dockerrun.zip s3://${{ vars.S3_BUCKET }}
