@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  run_id: ${{ github.run_id }}
+  run_id: PROD-api-${{ github.run_id }}
 
 jobs:
   
