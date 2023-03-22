@@ -17,8 +17,13 @@ jobs:
     environment: Prod
 
     steps:
+      - name: Debug
+        run: echo ${{ env.build_run_id }}
+
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -30,6 +35,7 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         run: |
           echo "Creating new application version "${{ env.build_run_id }}" for "${{ vars.EB_APPLICATION }}
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="deployment.zip"
-          echo "Updating beanstalk vars..."
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="Dockerrun.zip"
+          #         Update beanstalk environment to use latest application
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}
+    

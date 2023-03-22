@@ -3,7 +3,7 @@ name: PROD - Build
 on:
   push:
     branches: [ main ]
-  
+
 jobs:
   
   build:
@@ -11,36 +11,45 @@ jobs:
     environment: Prod
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-  
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-    
-    - name: Build and push the Docker image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      run: |
-        cd SimpleMinimalApi
-        docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }} .
-        echo "Pushing image to ECR..." $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
-        docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
-        echo ::set-output name=image::$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Update Dockerrun.aws.json
-      run: |
-        chmod +x update_dockerrun.sh
-        ./update_dockerrun.sh ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.run_id }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Zip Dockerrun.aws.json and upload to S3 bucket
-      run: |
-        zip deployment.zip Dockerrun.aws.json
-        aws s3 cp deployment.zip s3://${{ vars.S3_BUCKET }}
+      - name: Build and push the Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          cd SimpleMinimalApi
+          docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
+          docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
+          echo ::set-output name=image::$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+
+      - name: Install jq cli tool
+        run: sudo apt-get install jq
+
+      - name: Download Dockerrun.aws.json
+        run: aws s3 cp s3://${{ vars.S3_BUCKET }} Dockerrun.aws.json
+
+      - name: Update Dockerrun.aws.json file with docker image url
+        run: |
+          #          update image url and save to updated-Dockerrun.aws.json file
+               jq '.containerDefinitions[] | select(.name=="web-api") | .image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}' Dockerrun.aws.json > updated-Dockerrun.aws.json
+          #          replace Dockerrun.aws.json file with the updated file
+               mv updated-Dockerrrun.aws.json Dockerrun.aws.json
+
+      - name: Push updated Dockerrun.aws.json file with corresponding zip file
+        run: |
+          zip Dockerrun.zip Dockerrun.aws.json
+          #         json file is pushed because another repository must use that same file to update it's image url (client-app)
+          aws s3 cp Dockerrun.aws.json s3://${{ vars.S3_BUCKET }}
+          aws s3 cp Dockerrun.zip s3://${{ vars.S3_BUCKET }}
