@@ -42,7 +42,7 @@ jobs:
         
       - name: Download Dockerrun.aws.json
         run: |
-          aws s3 cp s3://${{ vars.S3_BUCKET }} ./Dockerrun.aws.json
+          aws s3 cp s3://${{ vars.S3_BUCKET }}/Dockerrun.aws.json ./Dockerrun.aws.json
           ls
 
       - name: Update Dockerrun.aws.json file with docker image url
