@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  run_id: ${{ github.run_id }}
+
 jobs:
   
   build:
