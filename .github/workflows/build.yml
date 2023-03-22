@@ -1,4 +1,4 @@
-name: PROD - Build docker image and push it to ECR
+name: PROD - Build
 
 on:
   push:
