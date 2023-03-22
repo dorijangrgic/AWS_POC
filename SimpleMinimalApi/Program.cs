@@ -36,6 +36,13 @@ app.MapGet("/hello", () =>
     });
 });
 
-app.MapGet("/yello", () => new {name = "Dorijan", surname = "Grgic"});
+app.MapGet("/yello", () => new { name = "Dorijan", surname = "Grgic" });
+
+app.MapGet("/payments", () => Enumerable.Range(1, 10).Select(x => new
+{
+    idPeyment = x,
+    occured = DateTime.UtcNow,
+    status = "Finished"
+}));
 
 app.Run();
