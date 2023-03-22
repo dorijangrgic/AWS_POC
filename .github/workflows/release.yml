@@ -6,7 +6,6 @@ on:
       - "PROD - Build docker image and push it to ECR"
     types:
       - completed
-  workflow_dispatch:
     
 jobs:
 
