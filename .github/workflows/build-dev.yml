@@ -14,9 +14,6 @@ jobs:
     environment: Dev
 
     steps:
-      - name: Debug
-        run: echo ${{ env.run_id }}
-        
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -37,7 +34,6 @@ jobs:
         run: |
           cd SimpleMinimalApi
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
-          echo "Pushing image to ECR..." $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
           echo ::set-output name=image::$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
 
