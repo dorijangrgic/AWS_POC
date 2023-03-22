@@ -2,8 +2,8 @@ name: PROD - Deploy newest docker image to Elastic Beanstalk
 
 on:
   workflow_run:
-    workflows:
-      - "PROD - Build docker image and push it to ECR"
+    workflows: [ "PROD - Build docker image and push it to ECR" ]
+    branches: [ main ]
     types:
       - completed
     
