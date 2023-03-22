@@ -1,6 +1,8 @@
 name: DEV - Deploy newest docker image to Elastic Beanstalk
 
 on:
+  push:
+    branches: [ dev ]
   workflow_run:
     workflows:
       - "DEV - Build docker image and push it to ECR"
