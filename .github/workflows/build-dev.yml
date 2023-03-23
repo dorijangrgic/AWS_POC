@@ -37,19 +37,16 @@ jobs:
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
           echo ::set-output name=image::$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
 
-      - name: Install yq cli tool
-        run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod a+x /usr/local/bin/yq
-
       - name: Download docker-compose.yml file
         run: |
           aws s3 cp s3://${{ vars.S3_BUCKET }}/docker-compose.yml .
           cat docker-compose.yml
 
-      - name: Update docker-compose.yml file with docker image url
+      - name: Install yq cli tool and update docker-compose.yml file with docker image url
         run: |
-          yq e -i '.services.client-app.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod a+x /usr/local/bin/yq
+          yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
           cat docker-compose.yml
 
       - name: Push updated docker-compose.yml file
