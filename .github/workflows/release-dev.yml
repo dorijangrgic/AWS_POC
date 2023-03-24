@@ -2,8 +2,8 @@ name: DEV - Deploy
 
 on:
   workflow_run:
-    workflows: ["DEV - Build"]
-    branches: [dev]
+    workflows: [ "DEV - Build" ]
+    branches: [ dev ]
     types:
       - completed
 
@@ -16,12 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Dev
 
-    steps:        
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -31,6 +26,5 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          echo "Creating new application version "${{ env.build_run_id }}" for "${{ vars.EB_APPLICATION }}
           aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/docker-compose.yml"
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}
