@@ -2,10 +2,11 @@ name: DEV - Build
 
 on:
   push:
-    branches: [ dev ]
+    branches:
+      - dev
 
 env:
-  run_id: DEV-api-${{ github.run_id }}
+  run_id: api-${{ github.run_id }}
 
 jobs:
   
@@ -35,7 +36,6 @@ jobs:
           cd SimpleMinimalApi
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
-          echo ::set-output name=image::$ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
 
       - name: Download docker-compose.yml file
         run: |
@@ -49,6 +49,8 @@ jobs:
           yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
           cat docker-compose.yml
 
-      - name: Push updated docker-compose.yml file
+      - name: Push updated docker-compose.yml and run_id
         run: |
+          echo ${{ env.run_id }} > latest-run-id.txt
           aws s3 cp docker-compose.yml s3://${{ vars.S3_BUCKET }}/dev/
+          aws s3 cp latest-run-id.txt s3://${{ vars.S3_BUCKET }}/dev/
