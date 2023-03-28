@@ -1,20 +1,22 @@
-name: PROD - Deploy
+name: DEV - Deploy
 
 on:
   workflow_run:
-    workflows: [ "PROD - Build" ]
-    branches: [ main ]
+    workflows:
+      - "DEV - Build"
+    branches:
+      - dev
     types:
       - completed
 
 env:
-  build_run_id: PROD-api-${{ github.event.workflow_run.id }}
+  build_run_id: api-${{ github.event.workflow_run.id }}
 
 jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: Prod
+    environment: Dev
 
     steps:
       - name: Configure AWS credentials
@@ -26,6 +28,5 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="prod/docker-compose.yml"
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/docker-compose.yml"
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}
-    

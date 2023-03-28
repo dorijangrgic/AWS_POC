@@ -1,0 +1,27 @@
+name: PROD - Deploy
+
+on: workflow_dispatch
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Prod
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Download latest-run-id.txt file
+        id: dl-run-id
+        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/latest-run-id.txt .
+
+      - name: Deploy to Elastic Beanstalk
+        env:
+        run: |
+          RUN_ID=`cat last-run-id.txt`
+          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label $RUN_ID
