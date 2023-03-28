@@ -16,10 +16,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Download latest-run-id.txt file
-        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/latest-run-id.txt .
+      - name: Download ${{ vars.LAST_RUN_ID }} file
+        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/${{ vars.LAST_RUN_ID }} .
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          RUN_ID=`cat last-run-id.txt`
+          RUN_ID=`cat ${{ vars.LAST_RUN_ID }}`
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label $RUN_ID

@@ -51,6 +51,6 @@ jobs:
 
       - name: Push updated docker-compose.yml and run_id
         run: |
-          echo ${{ env.run_id }} > latest-run-id.txt
+          echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           aws s3 cp docker-compose.yml s3://${{ vars.S3_BUCKET }}/dev/
-          aws s3 cp latest-run-id.txt s3://${{ vars.S3_BUCKET }}/dev/
+          aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/dev/
