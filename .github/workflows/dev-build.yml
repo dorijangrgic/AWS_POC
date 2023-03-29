@@ -66,7 +66,7 @@ jobs:
     steps:
       - name: Deploy to Elastic Beanstalk
         run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/docker-compose.yml"
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/docker-compose.yml"
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}
       
   migrations-dev:
