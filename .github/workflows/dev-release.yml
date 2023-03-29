@@ -1,6 +1,6 @@
 name: DEV - Deploy
 
-on: workflow-dispatch
+on: workflow_dispatch
 
 env:
   build_run_id: api-${{ github.event.workflow_run.id }}
