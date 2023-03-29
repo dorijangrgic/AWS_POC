@@ -1,13 +1,6 @@
 name: DEV - Deploy
 
-on:
-  workflow_run:
-    workflows:
-      - "DEV - Build"
-    branches:
-      - dev
-    types:
-      - completed
+on: workflow-dispatch
 
 env:
   build_run_id: api-${{ github.event.workflow_run.id }}
