@@ -11,6 +11,7 @@ env:
 jobs:
   
   build:
+    name: Build
     runs-on: ubuntu-latest
     environment: Dev
 
@@ -37,10 +38,12 @@ jobs:
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
 
+
       - name: Download docker-compose.yml file
         run: |
           aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/docker-compose.yml .
           cat docker-compose.yml
+
 
       - name: Install yq cli tool and update docker-compose.yml file with docker image url
         run: |
@@ -51,6 +54,19 @@ jobs:
 
       - name: Push updated docker-compose.yml and run_id
         run: |
-          echo ${{ env.run_id }} > latest-run-id.txt
+          echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           aws s3 cp docker-compose.yml s3://${{ vars.S3_BUCKET }}/dev/
-          aws s3 cp latest-run-id.txt s3://${{ vars.S3_BUCKET }}/dev/
+          aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/dev/
+          
+  deploy-dev:
+    name: Deploy to Dev
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.build_run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/docker-compose.yml"
+          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}
+      
+      - name: Run migrations on dev env
+        run: echo Running migrations
