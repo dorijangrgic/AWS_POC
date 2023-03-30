@@ -1,13 +1,6 @@
 name: PROD - Deploy
 
-on:
-  workflow_run:
-    workflows:
-      - "DEV - Build"
-    branches:
-      - dev
-    types:
-      - completed
+on: workflow_dispatch
 
 jobs:
 
