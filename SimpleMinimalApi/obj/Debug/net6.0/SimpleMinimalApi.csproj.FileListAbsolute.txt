@@ -25,3 +25,12 @@ C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\obj\Debug\net6.0\
 C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\obj\Debug\net6.0\SimpleMinimalApi.pdb
 C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\obj\Debug\net6.0\SimpleMinimalApi.genruntimeconfig.cache
 C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\obj\Debug\net6.0\ref\SimpleMinimalApi.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Npgsql.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\SimpleMinimalApi.DataAccess.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\SimpleMinimalApi.DataAccess.pdb
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Humanizer.dll
+C:\Users\User\Documents\Private\repos\AWS_POC\SimpleMinimalApi\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
