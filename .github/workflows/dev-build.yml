@@ -37,14 +37,20 @@ jobs:
           cd SimpleMinimalApi
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
-
-      - name: Install yq cli tool and update docker-compose-template.yml file with the generated docker image url
-        run: |
-          cd utility
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod a+x /usr/local/bin/yq
-          yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose-template.yml > docker-compose.yml
-          cat docker-compose.yml
+          
+      - name: Update docker-compose.yml variables
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'utility/docker-compose.yml'
+        env:
+          services.web-api.image: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
+          
+      - name: Update appsettings.json variables
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'SimpleMinimalApi/appsettings.json'
+        env:
+          ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
 
       - name: Zip docker-compose.yml and push it to the S3 bucket
         run: |
