@@ -86,4 +86,6 @@ jobs:
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
       
       - name: Run migrations
-        run: echo Running migrations
+        run: dotnet ef update --configuration Release
+        env:
+          prodia-db: ${{ secrets.CONNECTION_STRING }}
