@@ -32,11 +32,6 @@ jobs:
           files: 'SimpleMinimalApi/appsettings.json'
         env:
           ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
-        
-      - name: Print appsettings.json
-        run: |
-          cd SimpleMinimalApi
-          cat appsettings.json
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -58,8 +53,6 @@ jobs:
 
       - name: Zip docker-compose.yml and push it to the S3 bucket
         run: |
-          cd utility
-          cat docker-compose.yml
           echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           zip -r ${{ env.run_id }}.zip docker-compose.yml
           aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/dev/
