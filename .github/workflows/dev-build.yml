@@ -88,7 +88,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x.x
+
       - name: Run migrations
-        run: dotnet ef update
+        run: |
+          dotnet build
+          dotnet ef update
         env:
           prodia-db: ${{ secrets.CONNECTION_STRING }}
