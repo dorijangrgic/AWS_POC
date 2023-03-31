@@ -1,4 +1,4 @@
-name: DEV - Build
+name: DEV - Build, Release, Migrations
 
 on:
   push:
@@ -37,28 +37,30 @@ jobs:
           cd SimpleMinimalApi
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
+          
+      - name: Update docker-compose.yml variables
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'utility/docker-compose.yml'
+        env:
+          services.web-api.image: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
+          
+      - name: Update appsettings.json variables
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'SimpleMinimalApi/appsettings.json'
+        env:
+          ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
 
-
-      - name: Download docker-compose.yml file
+      - name: Zip docker-compose.yml and push it to the S3 bucket
         run: |
-          aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/docker-compose.yml .
-          cat docker-compose.yml
-
-
-      - name: Install yq cli tool and update docker-compose.yml file with docker image url
-        run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod a+x /usr/local/bin/yq
-          yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
-          cat docker-compose.yml
-
-      - name: Push updated docker-compose.yml and run_id
-        run: |
+          cd utility
           echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
-          aws s3 cp docker-compose.yml s3://${{ vars.S3_BUCKET }}/dev/
+          zip -r ${{ env.run_id }}.zip docker-compose.yml
+          aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/dev/
           aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/dev/
           
-  deploy-dev:
+  deploy:
     name: Deploy to Dev
     runs-on: ubuntu-latest
     needs: build
@@ -66,13 +68,14 @@ jobs:
     steps:
       - name: Deploy to Elastic Beanstalk
         run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/docker-compose.yml"
-          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.build_run_id }}
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/${{ env.run_id }}.zip"
+          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
       
-  migrations-dev:
-    name: Apply migrations on dev env
+  apply-migrations:
+    name: Apply migrations
     runs-on: ubuntu-latest
-    needs: deploy-dev
+    needs: deploy
+    
     steps:
       - name: Run migrations on dev env
         run: echo Running migrations
