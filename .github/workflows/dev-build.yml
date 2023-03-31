@@ -84,8 +84,11 @@ jobs:
         run: |
           aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/${{ env.run_id }}.zip"
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
-      
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
       - name: Run migrations
-        run: dotnet ef update --configuration Release
+        run: dotnet ef update
         env:
           prodia-db: ${{ secrets.CONNECTION_STRING }}
