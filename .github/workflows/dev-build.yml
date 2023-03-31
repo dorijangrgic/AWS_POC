@@ -34,7 +34,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          cd SimpleMinimalApi
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
           
