@@ -99,6 +99,9 @@ jobs:
           dotnet build
         
       - name: Run migrations
-        run: dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimleMinimalApi
+        run: |
+          pwd
+          ls
+          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
         env:
           prodia-db: ${{ secrets.CONNECTION_STRING }}
