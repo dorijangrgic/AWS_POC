@@ -1,15 +1,36 @@
-name: PROD - Deploy
+name: PROD - Migrations and Deploy
 
 on: workflow_dispatch
 
 jobs:
 
-  deploy:
-    name: Deploy to Prod
+  run-migrations-and-deploy-new-version:
+    name: Run migrations and deploy to Dev
     runs-on: ubuntu-latest
     environment: Prod
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update appsettings.json variables
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'SimpleMinimalApi/appsettings.json'
+        env:
+          ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
+          
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x.x
+
+      - name: Install dotnet-ef tool and run migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet build
+          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
