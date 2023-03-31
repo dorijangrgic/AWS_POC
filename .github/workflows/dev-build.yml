@@ -94,11 +94,11 @@ jobs:
           dotnet-version: 6.x.x
 
       - name: Install dotnet-ef tool
-        run: dotnet tool install --global dotnet-ef
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet build
         
       - name: Run migrations
-        run: |
-          dotnet build
-          dotnet ef update
+        run: dotnet ef update --project SimpleMinimalApi.DataAccess --startup-project SimleMinimalApi
         env:
           prodia-db: ${{ secrets.CONNECTION_STRING }}
