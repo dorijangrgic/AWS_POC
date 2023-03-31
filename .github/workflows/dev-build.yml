@@ -10,21 +10,14 @@ env:
 
 jobs:
   
-  build:
-    name: Build
+  prepare-repo:
+    name: Prepare repository
     runs-on: ubuntu-latest
     environment: Dev
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Update appsettings.json variables
         uses: microsoft/variable-substitution@v1
@@ -32,6 +25,31 @@ jobs:
           files: 'SimpleMinimalApi/appsettings.json'
         env:
           ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
+      
+      - name: Upload repo as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: repo
+          path: .
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: Dev
+    needs: prepare-repo
+    
+    steps:
+      - name: Download repo artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: repo
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -53,7 +71,6 @@ jobs:
 
       - name: Zip docker-compose.yml and push it to the S3 bucket
         run: |
-          echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           zip -r ${{ env.run_id }}.zip docker-compose.yml
           aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/dev/
           aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/dev/
@@ -65,20 +82,10 @@ jobs:
     needs: build
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.x.x
-
-      - name: Update appsettings.json variables
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: 'SimpleMinimalApi/appsettings.json'
-        env:
-          ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
 
       - name: Install dotnet-ef tool and run migrations
         run: |
