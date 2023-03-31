@@ -71,6 +71,7 @@ jobs:
 
       - name: Zip docker-compose.yml and push it to the S3 bucket
         run: |
+          echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           zip -r ${{ env.run_id }}.zip docker-compose.yml
           aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/dev/
           aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/dev/
@@ -82,6 +83,11 @@ jobs:
     needs: build
     
     steps:
+      - name: Download repo artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: repo
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
