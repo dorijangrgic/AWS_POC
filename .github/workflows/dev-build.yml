@@ -52,7 +52,7 @@ jobs:
       - name: Update docker-compose.yml variables
         uses: microsoft/variable-substitution@v1
         with:
-          files: 'utility/docker-compose.yml'
+          files: 'docker-compose.yml'
         env:
           services.web-api.image: ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
 
@@ -65,13 +65,33 @@ jobs:
           aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/dev/
           aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/dev/
           
-  deploy:
-    name: Deploy to Dev
+  run-migrations-and-deploy-new-version:
+    name: Run migrations and deploy to Dev
     runs-on: ubuntu-latest
     environment: Dev
     needs: build
     
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.x.x
+
+      - name: Update appsettings.json variables
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: 'SimpleMinimalApi/appsettings.json'
+        env:
+          ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
+
+      - name: Install dotnet-ef tool and run migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet build
+          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -84,24 +104,3 @@ jobs:
         run: |
           aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="dev/${{ env.run_id }}.zip"
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.x.x
-
-      - name: Install dotnet-ef tool
-        run: |
-          dotnet tool install --global dotnet-ef
-          dotnet build
-        
-      - name: Run migrations
-        run: |
-          pwd
-          ls
-          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
-        env:
-          prodia-db: ${{ secrets.CONNECTION_STRING }}
