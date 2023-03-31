@@ -68,6 +68,7 @@ jobs:
   deploy:
     name: Deploy to Dev
     runs-on: ubuntu-latest
+    environment: Dev
     needs: build
     
     steps:
@@ -79,6 +80,7 @@ jobs:
   apply-migrations:
     name: Apply migrations
     runs-on: ubuntu-latest
+    environment: Dev
     needs: deploy
     
     steps:
