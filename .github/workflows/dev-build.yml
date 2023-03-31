@@ -94,7 +94,7 @@ jobs:
           dotnet-version: 6.x.x
 
       - name: Install dotnet-ef tool
-        run: dotnet tool install dotnet-ef
+        run: dotnet tool install --global dotnet-ef
         
       - name: Run migrations
         run: |
