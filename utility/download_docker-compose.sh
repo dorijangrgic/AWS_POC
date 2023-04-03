@@ -13,6 +13,7 @@ if [ $? -eq 0 ]; then
     aws s3 cp s3://${S3_BUCKET}/${ENV_DIR}/$RUN_ID .
     # overwrite existing docker-compose.yml file
     unzip $RUN_ID -d .
+    ls
 
 else
     echo "${FILE_NAME} does not exist. Using default docker-compose.yml..."
