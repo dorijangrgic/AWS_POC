@@ -62,26 +62,23 @@ jobs:
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
 
-      - name: Download latest docker-compose.yml file
+      - name: Download latest docker-compose.yml file if exists in the S3 bucket
         run: |
-          aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/${{ vars.LAST_RUN_ID }} .
-          RUN_ID=`cat ${{ vars.LAST_RUN_ID }}`.zip
-          echo $RUN_ID
-          aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/$RUN_ID .
+          cd utility
           ls
-          unzip $RUN_ID -d unzipped
+          source download_docker-compose.sh
 
       - name: Update the docker-compose.yml file with new image url
         run: |
+          cd utility
+          ls
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod a+x /usr/local/bin/yq
-          cd unzipped
-          ls
           yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
 
       - name: Push docker-compose.yml with the corresponding zip file
         run: |
-          cd unzipped
+          cd utility
           ls
           echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           zip -r ${{ env.run_id }}.zip docker-compose.yml
