@@ -12,7 +12,7 @@ if [ $? -eq 0 ]; then
     RUN_ID=$(cat ${FILE_NAME}).zip
     aws s3 cp s3://${S3_BUCKET}/${ENV_DIR}/$RUN_ID .
     # overwrite existing docker-compose.yml file
-    unzip $RUN_ID -d .
+    echo 'y' | unzip $RUN_ID -d .
     ls
     cat docker-compose.yml
 
