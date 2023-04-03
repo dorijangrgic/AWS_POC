@@ -68,17 +68,21 @@ jobs:
           RUN_ID=`cat ${{ vars.LAST_RUN_ID }}`.zip
           aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/$RUN_ID .
           unzip $RUN_ID -d unzipped
+          echo $RUN_ID
+          ls
 
       - name: Update the docker-compose.yml file with new image url
         run: |
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod a+x /usr/local/bin/yq
           cd unzipped
+          ls
           yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
 
       - name: Push docker-compose.yml with the corresponding zip file
         run: |
           cd unzipped
+          ls
           echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           zip -r ${{ env.run_id }}.zip docker-compose.yml
           aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/dev/
