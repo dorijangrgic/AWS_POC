@@ -66,10 +66,10 @@ jobs:
         run: |
           aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/${{ vars.LAST_RUN_ID }} .
           RUN_ID=`cat ${{ vars.LAST_RUN_ID }}`.zip
-          aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/$RUN_ID .
-          unzip $RUN_ID -d unzipped
           echo $RUN_ID
+          aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/$RUN_ID .
           ls
+          unzip $RUN_ID -d unzipped
 
       - name: Update the docker-compose.yml file with new image url
         run: |
