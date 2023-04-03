@@ -66,7 +66,7 @@ jobs:
         run: |
           cd utility
           ls
-          source download_docker-compose.sh
+          source download_docker-compose.sh ${{ vars.S3_BUCKET }} dev ${{ vars.LAST_RUN_ID }}
 
       - name: Update the docker-compose.yml file with new image url
         run: |
