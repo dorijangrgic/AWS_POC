@@ -14,6 +14,7 @@ if [ $? -eq 0 ]; then
     # overwrite existing docker-compose.yml file
     unzip $RUN_ID -d .
     ls
+    cat docker-compose.yml
 
 else
     echo "${FILE_NAME} does not exist. Using default docker-compose.yml..."
