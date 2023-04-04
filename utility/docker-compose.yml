@@ -9,4 +9,4 @@ services:
     image: img
     container_name: prodia-ui
     ports:
-      - '80:80'
+      - '8080:8080'
