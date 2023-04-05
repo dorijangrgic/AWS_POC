@@ -1,9 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
-# Expose the port that application will listen on
-EXPOSE 3000
-
 # Copy everything
 COPY . ./
 # Restore as distinct layers
@@ -11,6 +8,8 @@ RUN dotnet restore
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
+# Expose the port that application will listen on
+EXPOSE 80
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:6.0

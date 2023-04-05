@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Configuration.AddEnvironmentVariables();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,7 +40,14 @@ app.MapGet("/hello", () =>
     });
 });
 
-app.MapGet("/yello", () => new { name = "Dorijan", surname = "Grgic" });
+app.MapGet("/yello", (IConfiguration configuration, IWebHostEnvironment environment) => new
+{
+    name = "Dorijan",
+    surname = "Grgic",
+    prodiadbconnstring = configuration.GetConnectionString("ProdiaDb"),
+    env = environment.EnvironmentName,
+    redisurl = configuration["RedisUrl"]
+});
 
 app.MapGet("/payments", () => Enumerable.Range(1, 20).Select(x => new
 {

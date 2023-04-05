@@ -19,13 +19,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Update appsettings.json variables
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: 'SimpleMinimalApi/appsettings.json'
-        env:
-          ConnectionStrings.prodia-db: ${{ secrets.CONNECTION_STRING }}
-      
       - name: Upload repo as artifact
         uses: actions/upload-artifact@v2
         with:
