@@ -1,4 +1,3 @@
-using SimpleMinimalApi;
 using SimpleMinimalApi.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +17,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -30,30 +29,12 @@ app.MapControllers();
 
 // endpoints
 
-app.MapGet("/hello", () =>
+app.MapGet("/env", (IConfiguration configuration, IWebHostEnvironment environment) => new
 {
-    return Enumerable.Range(1, 2).Select(x => new WeatherForecast
-    {
-        Date = DateTime.UtcNow,
-        TemperatureC = x,
-        Summary = $"{x}_forecast"
-    });
+	prodiadbconnstring = configuration.GetConnectionString("ProdiaDB"),
+	env = environment.EnvironmentName,
+	redisurl = configuration["RedisUrl"]
 });
 
-app.MapGet("/yello", (IConfiguration configuration, IWebHostEnvironment environment) => new
-{
-    name = "Dorijan",
-    surname = "Grgic",
-    prodiadbconnstring = configuration.GetConnectionString("ProdiaDb"),
-    env = environment.EnvironmentName,
-    redisurl = configuration["RedisUrl"]
-});
-
-app.MapGet("/payments", () => Enumerable.Range(1, 20).Select(x => new
-{
-    idPeyment = x,
-    occured = DateTime.UtcNow,
-    status = "Finished"
-}));
 
 app.Run();
