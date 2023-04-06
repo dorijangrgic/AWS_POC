@@ -4,9 +4,13 @@ services:
     image: img
     container_name: prodia-api
     ports:
-      - '3000:3000'
+      - '8080:80'
+    env_file:
+      - .env
   web-portal:
     image: img
     container_name: prodia-ui
     ports:
-      - '8080:8080'
+      - '3000:3000'
+    env_file:
+      - .env

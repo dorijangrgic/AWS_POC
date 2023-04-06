@@ -1,0 +1,115 @@
+name: TEST - Build, Migrations, Release
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  run_id: api-${{ github.run_id }}
+
+jobs:
+  
+  prepare-repo:
+    name: Prepare repository
+    runs-on: ubuntu-latest
+    environment: Test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Upload repo as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: repo
+          path: .
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: Test
+    needs: prepare-repo
+    
+    steps:
+      - name: Download repo artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: repo
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push the Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
+          docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
+
+      - name: Download latest docker-compose.yml file if exists in the S3 bucket
+        run: |
+          cd utility
+          sudo chmod +x download_docker-compose.sh
+          ./download_docker-compose.sh ${{ vars.S3_BUCKET }} ${{ vars.BUCKET_DIR }} ${{ vars.LAST_RUN_ID }}
+
+      - name: Update the docker-compose.yml file with new image url
+        run: |
+          cd utility
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod a+x /usr/local/bin/yq
+          yq e -i '.services.web-api.image="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}"' docker-compose.yml
+
+      - name: Push docker-compose.yml with the corresponding zip file
+        run: |
+          cd utility
+          echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
+          zip -r ${{ env.run_id }}.zip docker-compose.yml
+          aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/${{ vars.BUCKET_DIR }}/
+          aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/${{ vars.BUCKET_DIR }}/
+
+  run-migrations-and-deploy-new-version:
+    name: Run migrations and deploy
+    runs-on: ubuntu-latest
+    environment: Test
+    needs: build
+    
+    steps:
+#      - name: Download repo artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: repo
+#
+#      - name: Set up .NET Core
+#        uses: actions/setup-dotnet@v1
+#        with:
+#          dotnet-version: 6.x.x
+#
+#      - name: Install dotnet-ef tool and run migrations
+#        run: |
+#          dotnet tool install --global dotnet-ef
+#          dotnet build
+#          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
+      
+      - name: Run migrations
+        run: echo Running migrations against TEST database...
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="${{ vars.BUCKET_DIR }}/${{ env.run_id }}.zip"
+          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}

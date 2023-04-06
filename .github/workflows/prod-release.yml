@@ -1,26 +1,29 @@
-name: PROD - Migrations and Deploy
+name: PROD - Migrations, Release
 
 on: workflow_dispatch
 
 jobs:
 
   run-migrations-and-deploy-new-version:
-    name: Run migrations and deploy to Dev
+    name: Run migrations and deploy
     runs-on: ubuntu-latest
     environment: Prod
 
     steps:        
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.x.x
+#      - name: Set up .NET Core
+#        uses: actions/setup-dotnet@v1
+#        with:
+#          dotnet-version: 6.x.x
+#
+#      - name: Install dotnet-ef tool and run migrations
+#        run: |
+#          dotnet tool install --global dotnet-ef
+#          dotnet build
+#          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
 
-      - name: Install dotnet-ef tool and run migrations
-        run: |
-          dotnet tool install --global dotnet-ef
-          dotnet build
-          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
-
+      - name: Run migrations
+        run: echo Running migrations against PROD database...
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -29,7 +32,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Download ${{ vars.LAST_RUN_ID }} file
-        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/dev/${{ vars.LAST_RUN_ID }} .
+        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/${{ vars.BUCKET_DIR }}/${{ vars.LAST_RUN_ID }} .
 
       - name: Deploy to Elastic Beanstalk
         run: |
