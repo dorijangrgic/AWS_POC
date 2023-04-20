@@ -1,13 +1,13 @@
 version: '3.8'
 services:
-  web-api:
+  api:
     image: img
     container_name: prodia-api
     ports:
       - '8080:80'
     env_file:
       - .env
-  web-portal:
+  ui:
     image: img
     container_name: prodia-ui
     ports:

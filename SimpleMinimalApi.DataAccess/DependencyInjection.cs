@@ -9,7 +9,7 @@ public static class DependencyInjection
 	public static IServiceCollection AddDataAccess(this IServiceCollection services)
 	{
 		var connectionString = services.BuildServiceProvider().GetRequiredService<IConfiguration>()
-			.GetConnectionString("prodia-db");
+			.GetConnectionString("ProdiaDB");
 
 		services.AddDbContext<ProdiaDbContext>(options => options.UseNpgsql(connectionString));
 
