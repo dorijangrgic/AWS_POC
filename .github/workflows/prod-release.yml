@@ -8,29 +8,37 @@ permissions:
 
 jobs:
 
-  run-migrations-and-deploy-new-version:
-    name: Run migrations and deploy
+  run-db-migrations:
+    name: Run db migrations
     runs-on: ubuntu-latest
     environment: Prod
-
+    
     steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Set up .NET Core
-#        uses: actions/setup-dotnet@v1
-#        with:
-#          dotnet-version: 6.x.x
-#
-#      - name: Install dotnet-ef tool and run migrations
-#        run: |
-#          dotnet tool install --global dotnet-ef
-#          dotnet build
-#          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
+      #      - name: Checkout repository
+      #        uses: actions/checkout@v3
+      #
+      #      - name: Set up .NET Core
+      #        uses: actions/setup-dotnet@v1
+      #        with:
+      #          dotnet-version: 6.x.x
+      #
+      #      - name: Install dotnet-ef tool and run migrations
+      #        run: |
+      #          dotnet tool install --global dotnet-ef
+      #          dotnet build
+      #          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
 
       - name: Run migrations
-        run: echo Running migrations against PROD database...
-        
+        run: echo Running migrations against TEST database...
+
+
+  deploy-to-elastic-beanstalk:
+    name: Deploy to elastic beanstalk
+    runs-on: ubuntu-latest
+    environment: Test
+    needs: run-db-migrations
+    
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
