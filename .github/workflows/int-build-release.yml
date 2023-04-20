@@ -29,8 +29,8 @@ jobs:
           name: repo
           path: .
 
-  build:
-    name: Build
+  build-docker-image:
+    name: Build docker image
     runs-on: ubuntu-latest
     environment: Int
     needs: prepare-repo
@@ -58,6 +58,24 @@ jobs:
           docker build -t $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }} .
           docker push $ECR_REGISTRY/${{ vars.ECR_REPOSITORY }}:${{ env.run_id }}
 
+  update-docker-compose:
+    name: Update docker-compose.yml file in S3 bucket
+    runs-on: ubuntu-latest
+    environment: Int
+    needs: build-docker-image
+    
+    steps:
+      - name: Download repo artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: repo
+            
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        
       - name: Download latest docker-compose.yml file if exists in the S3 bucket
         run: |
           cd utility
@@ -79,8 +97,8 @@ jobs:
           aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/${{ vars.S3_BUCKET_DIR }}/
           aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/${{ vars.S3_BUCKET_DIR }}/
 
-  run-migrations-and-deploy-new-version:
-    name: Run migrations and deploy
+  run-db-migrations:
+    name: Run db migrations
     runs-on: ubuntu-latest
     environment: Int
     needs: build
@@ -101,10 +119,17 @@ jobs:
 #          dotnet tool install --global dotnet-ef
 #          dotnet build
 #          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
-
       - name: Run migrations
         run: echo Running migrations against INT database...
-        
+          
+  deploy-to-elastic-beanstalk:
+    name: Deploy to elastic beanstalk
+    runs-on: ubuntu-latest
+    environment: Int
+    needs: run-db-migrations
+    
+    steps:
+      - 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
