@@ -121,12 +121,28 @@ jobs:
 #          dotnet ef database update --project SimpleMinimalApi.DataAccess --startup-project SimpleMinimalApi
       - name: Run migrations
         run: echo Running migrations against INT database...
+  
+  elastic-beanstalk-app-version:
+    name: Create new app version on elastic beanstalk
+    runs-on: ubuntu-latest
+    environment: Int
+    needs: run-db-migrations
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create app version
+        run: aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="${{ vars.S3_BUCKET_DIR }}/${{ env.run_id }}.zip"
           
   deploy-to-elastic-beanstalk:
     name: Deploy to elastic beanstalk
     runs-on: ubuntu-latest
     environment: Int
-    needs: run-db-migrations
+    needs: elastic-beanstalk-app-version
     
     steps:
       - name: Configure AWS credentials
@@ -136,6 +152,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Deploy to Elastic Beanstalk
-        run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="${{ vars.S3_BUCKET_DIR }}/${{ env.run_id }}.zip"
-          aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
+        run: aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
