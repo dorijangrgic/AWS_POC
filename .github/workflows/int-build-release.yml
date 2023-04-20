@@ -101,7 +101,7 @@ jobs:
     name: Run db migrations
     runs-on: ubuntu-latest
     environment: Int
-    needs: build
+    needs: update-docker-compose
     
     steps:
 #      - name: Download repo artifact
