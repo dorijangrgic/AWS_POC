@@ -1,4 +1,4 @@
-name: TEST - Build, Migrations, Release
+name: TEST - Migrations, Release
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Download ${{ vars.LAST_RUN_ID }} file
-        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/${{ vars.LAST_RUN_ID }} .
+        run: aws s3 cp s3://${{ vars.S3_BUCKET }}/${{ vars.S3_BUCKET_DIR }}/${{ vars.LAST_RUN_ID }} .
 
       - name: Deploy to Elastic Beanstalk
         run: |

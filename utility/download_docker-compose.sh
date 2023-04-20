@@ -2,7 +2,7 @@ S3_BUCKET="$1"
 ENV_DIR="$2"
 FILE_NAME="$3"
 
-FILE_EXISTS=$(aws s3 ls "s3://${S3_BUCKET}/${ENV_DIR}/${FILE_NAME}" 2>&1)
+FILE_EXISTS=$(aws s3 ls "s3://${S3_BUCKET}/${FILE_NAME}" 2>&1)
 
 if [ $? -eq 0 ]; then
     echo "${FILE_NAME} exists. Downloading and updating docker-compose.yml..."
