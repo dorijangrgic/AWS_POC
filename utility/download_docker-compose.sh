@@ -1,5 +1,5 @@
 S3_BUCKET="$1"
-FILE_NAME="$3"
+FILE_NAME="$2"
 
 FILE_EXISTS=$(aws s3 ls "s3://${S3_BUCKET}/${FILE_NAME}" 2>&1)
 
