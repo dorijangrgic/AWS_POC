@@ -55,6 +55,10 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
         
       - name: Download latest docker-compose.yml file if exists in the S3 bucket
         run: |
