@@ -6,7 +6,7 @@ on:
       - dev
 
 env:
-  run_id: INT-api-${{ github.run_id }}
+  run_id: api-${{ github.run_id }}
   
 permissions:
   id-token: write
@@ -62,7 +62,7 @@ jobs:
         run: |
           cd utility
           sudo chmod +x download_docker-compose.sh
-          ./download_docker-compose.sh ${{ vars.S3_BUCKET }} ${{ vars.BUCKET_DIR }} ${{ vars.LAST_RUN_ID }}
+          ./download_docker-compose.sh ${{ vars.S3_BUCKET }} ${{ vars.LAST_RUN_ID }}
 
       - name: Update the docker-compose.yml file with new image url
         run: |
@@ -76,8 +76,8 @@ jobs:
           cd utility
           echo ${{ env.run_id }} > ${{ vars.LAST_RUN_ID }}
           zip -r ${{ env.run_id }}.zip docker-compose.yml
-          aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/${{ vars.BUCKET_DIR }}/
-          aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/${{ vars.BUCKET_DIR }}/
+          aws s3 cp ${{ env.run_id }}.zip s3://${{ vars.S3_BUCKET }}/
+          aws s3 cp ${{ vars.LAST_RUN_ID }} s3://${{ vars.S3_BUCKET }}/
 
   run-migrations-and-deploy-new-version:
     name: Run migrations and deploy
@@ -113,5 +113,5 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="${{ vars.BUCKET_DIR }}/${{ env.run_id }}.zip"
+          aws elasticbeanstalk create-application-version --application-name ${{ vars.EB_APPLICATION }} --version-label ${{ env.run_id }} --source-bundle S3Bucket=${{ vars.S3_BUCKET }},S3Key="${{ env.run_id }}.zip"
           aws elasticbeanstalk update-environment --application-name ${{ vars.EB_APPLICATION }} --environment-name ${{ vars.EB_ENVIRONMENT }} --version-label ${{ env.run_id }}
